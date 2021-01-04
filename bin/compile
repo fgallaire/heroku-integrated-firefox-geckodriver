@@ -132,11 +132,10 @@ if ! [ -e $CACHE_DIR/$FILE_NAME_FIREFOX ]; then
   curl $BUILDPACK_FIREFOX_PACKAGE -L -o $CACHE_DIR/$FILE_NAME_FIREFOX
 fi
 
-topic "Extracting Firefox binaries to ${BUILD_DIR}/vendor/${ARCHIVE_NAME_FIREFOX}"
+topic "Extracting Firefox binaries to ${BUILD_DIR}/${ARCHIVE_NAME_FIREFOX}"
 mkdir -p $CACHE_DIR/$ARCHIVE_NAME_FIREFOX
-mkdir -p $BUILD_DIR/vendor
 tar jxf $CACHE_DIR/$FILE_NAME_FIREFOX -C $CACHE_DIR
-mv $CACHE_DIR/$ARCHIVE_NAME_FIREFOX $BUILD_DIR/vendor/
+mv $CACHE_DIR/$ARCHIVE_NAME_FIREFOX $BUILD_DIR/
 
 # Install Geckodriver
 if ! [ -e $CACHE_DIR/$FILE_NAME_GECKODRIVER ]; then
@@ -144,19 +143,19 @@ if ! [ -e $CACHE_DIR/$FILE_NAME_GECKODRIVER ]; then
   curl $BUILDPACK_GECKODRIVER_PACKAGE -L -o $CACHE_DIR/$FILE_NAME_GECKODRIVER
 fi
 
-topic "Extracting Geckodriver binaries to ${BUILD_DIR}/vendor/${ARCHIVE_NAME_GECKODRIVER}"
+topic "Extracting Geckodriver binaries to ${BUILD_DIR}/${ARCHIVE_NAME_GECKODRIVER}"
 mkdir -p $CACHE_DIR/$ARCHIVE_NAME_GECKODRIVER
-mkdir -p $BUILD_DIR/vendor/$ARCHIVE_NAME_GECKODRIVER
+mkdir -p $BUILD_DIR/$ARCHIVE_NAME_GECKODRIVER
 tar -xzf $CACHE_DIR/$FILE_NAME_GECKODRIVER -C $CACHE_DIR
 chmod +x $CACHE_DIR/$ARCHIVE_NAME_GECKODRIVER
-mv $CACHE_DIR/$ARCHIVE_NAME_GECKODRIVER $BUILD_DIR/vendor/$ARCHIVE_NAME_GECKODRIVER/
+mv $CACHE_DIR/$ARCHIVE_NAME_GECKODRIVER $BUILD_DIR/$ARCHIVE_NAME_GECKODRIVER/
 
 topic "Setting paths"
 mkdir -p $BUILD_DIR/.profile.d
 cat <<EOF >$BUILD_DIR/.profile.d/000_apt.sh
-export PATH="\$HOME/.apt/usr/bin:\$BUILD_DIR/vendor/firefox:\$BUILD_DIR/vendor/geckodriver:\$PATH"
-export LD_LIBRARY_PATH="\$HOME/.apt/usr/lib/x86_64-linux-gnu:\$HOME/.apt/usr/lib/i386-linux-gnu:\$HOME/.apt/usr/lib:\$BUILD_DIR/vendor/firefox:\$BUILD_DIR/vendor/geckodriver:\$LD_LIBRARY_PATH"
-export LIBRARY_PATH="\$HOME/.apt/usr/lib/x86_64-linux-gnu:\$HOME/.apt/usr/lib/i386-linux-gnu:\$HOME/.apt/usr/lib:\$BUILD_DIR/vendor/firefox:\$BUILD_DIR/vendor/geckodriver:\$LIBRARY_PATH"
+export PATH="\$HOME/.apt/usr/bin:\$BUILD_DIR/firefox:\$BUILD_DIR/geckodriver:\$PATH"
+export LD_LIBRARY_PATH="\$HOME/.apt/usr/lib/x86_64-linux-gnu:\$HOME/.apt/usr/lib/i386-linux-gnu:\$HOME/.apt/usr/lib:\$BUILD_DIR/firefox:\$BUILD_DIR/geckodriver:\$LD_LIBRARY_PATH"
+export LIBRARY_PATH="\$HOME/.apt/usr/lib/x86_64-linux-gnu:\$HOME/.apt/usr/lib/i386-linux-gnu:\$HOME/.apt/usr/lib:\$BUILD_DIR/firefox:\$BUILD_DIR/geckodriver:\$LIBRARY_PATH"
 export INCLUDE_PATH="\$HOME/.apt/usr/include:\$HOME/.apt/usr/include/x86_64-linux-gnu:\$INCLUDE_PATH"
 export CPATH="\$INCLUDE_PATH"
 export CPPPATH="\$INCLUDE_PATH"
@@ -164,9 +163,9 @@ export PKG_CONFIG_PATH="\$HOME/.apt/usr/lib/x86_64-linux-gnu/pkgconfig:\$HOME/.a
 export TMPDIR="\$BUILD_DIR/tmp"
 EOF
 
-export PATH="$BUILD_DIR/.apt/usr/bin:$PATH:\$BUILD_DIR/vendor/firefox:\$BUILD_DIR/vendor/geckodriver:\$PATH"
-export LD_LIBRARY_PATH="$BUILD_DIR/.apt/usr/lib/x86_64-linux-gnu:$BUILD_DIR/.apt/usr/lib/i386-linux-gnu:$BUILD_DIR/.apt/usr/lib:\$BUILD_DIR/vendor/firefox:\$BUILD_DIR/vendor/geckodriver:\$LIBRARY_PATH"
-export LIBRARY_PATH="$BUILD_DIR/.apt/usr/lib/x86_64-linux-gnu:$BUILD_DIR/.apt/usr/lib/i386-linux-gnu:$BUILD_DIR/.apt/usr/lib:\$BUILD_DIR/vendor/firefox:\$BUILD_DIR/vendor/geckodriver:\$LIBRARY_PATH"
+export PATH="$BUILD_DIR/.apt/usr/bin:$PATH:\$BUILD_DIR/firefox:\$BUILD_DIR/geckodriver:\$PATH"
+export LD_LIBRARY_PATH="$BUILD_DIR/.apt/usr/lib/x86_64-linux-gnu:$BUILD_DIR/.apt/usr/lib/i386-linux-gnu:$BUILD_DIR/.apt/usr/lib:\$BUILD_DIR/firefox:\$BUILD_DIR/geckodriver:\$LIBRARY_PATH"
+export LIBRARY_PATH="$BUILD_DIR/.apt/usr/lib/x86_64-linux-gnu:$BUILD_DIR/.apt/usr/lib/i386-linux-gnu:$BUILD_DIR/.apt/usr/lib:\$BUILD_DIR/firefox:\$BUILD_DIR/geckodriver:\$LIBRARY_PATH"
 export INCLUDE_PATH="$BUILD_DIR/.apt/usr/include:$BUILD_DIR/.apt/usr/include/x86_64-linux-gnu:$INCLUDE_PATH"
 export CPATH="$INCLUDE_PATH"
 export CPPPATH="$INCLUDE_PATH"
